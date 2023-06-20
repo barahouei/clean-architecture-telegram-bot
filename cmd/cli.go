@@ -1,3 +1,4 @@
+// Package cmd contains main functionality for the application using CLI commands.
 package cmd
 
 import (
@@ -6,6 +7,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+// Run executes the application.
 func Run() error {
 	app := cli.App{
 		Name:      "Sample-telegram-bot",

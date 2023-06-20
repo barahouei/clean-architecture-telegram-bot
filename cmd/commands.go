@@ -1,3 +1,4 @@
+// Package cmd contains main functionality for the application using CLI commands.
 package cmd
 
 import (
@@ -29,6 +30,7 @@ var (
 	debugMode = false
 )
 
+// serve is the main command that runs the application.
 func serve(c *cli.Context) error {
 	fmt.Printf("Debug mod is: %t\n", debugMode)
 	fmt.Println("clean-architecture-telegram-bot")
@@ -36,6 +38,7 @@ func serve(c *cli.Context) error {
 	return nil
 }
 
+// debug is a subcommand of the serve command that turns debug mode on.
 func debug(c *cli.Context) error {
 	log.Println("Debug mode is on")
 	debugMode = true
