@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"log"
+
+	"github.com/barahouei/clean-architecture-telegram-bot/cmd"
+)
 
 func main() {
-	fmt.Println("clean-architecture-telegram-bot")
+	if err := cmd.Run(); err != nil {
+		log.Fatal(err)
+	}
 }

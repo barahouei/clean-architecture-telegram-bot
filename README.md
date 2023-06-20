@@ -1,3 +1,7 @@
 # clean-architecture-telegram-bot
 
-A sample for creating telegram bots in Golang with clean architecture
+A sample project for creating telegram bots in Golang with clean architecture.
+
+## /cmd
+
+Main functionality for the bot.
