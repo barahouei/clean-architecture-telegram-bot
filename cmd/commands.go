@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/urfave/cli/v2"
 )
@@ -36,7 +37,7 @@ func serve(c *cli.Context) error {
 }
 
 func debug(c *cli.Context) error {
-	fmt.Println("Debug mode is on")
+	log.Println("Debug mode is on")
 	debugMode = true
 
 	return nil
