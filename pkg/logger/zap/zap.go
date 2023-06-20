@@ -45,8 +45,3 @@ func (l *log) Info(message string) {
 func (l *log) Error(message string) {
 	l.zap.Error(message)
 }
-
-// Sync flushes any buffered log entries.
-func (l *log) Sync() error {
-	return l.zap.Sync()
-}
