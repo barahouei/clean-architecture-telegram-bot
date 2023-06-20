@@ -4,8 +4,11 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"os"
 
+	"github.com/barahouei/clean-architecture-telegram-bot/pkg/logger/zap"
 	"github.com/urfave/cli/v2"
+	"go.uber.org/zap/zapcore"
 )
 
 var (
@@ -34,6 +37,16 @@ var (
 func serve(c *cli.Context) error {
 	fmt.Printf("Debug mod is: %t\n", debugMode)
 	fmt.Println("clean-architecture-telegram-bot")
+
+	file, err := os.OpenFile("logs/bot.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	logger := zap.New(file, zapcore.InfoLevel)
+
+	logger.Info("Bot Starting...")
 
 	return nil
 }
