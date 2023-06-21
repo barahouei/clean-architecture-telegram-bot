@@ -4,4 +4,8 @@ A sample project for creating telegram bots in Golang with clean architecture.
 
 ## /cmd
 
-Main functionality for the bot.
+Main functionality for the App.
+
+## /configs
+
+Configuration for the App.
