@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/barahouei/clean-architecture-telegram-bot/configs"
+	"github.com/barahouei/clean-architecture-telegram-bot/models"
 	"github.com/barahouei/clean-architecture-telegram-bot/pkg/logger/zap"
 	"github.com/urfave/cli/v2"
 	"go.uber.org/zap/zapcore"
@@ -34,12 +35,6 @@ var (
 	debugMode = false
 )
 
-const (
-	_ configs.Mode = iota
-	development
-	production
-)
-
 // serve is the main command that runs the application.
 func serve(c *cli.Context) error {
 	fmt.Printf("Debug mod is: %t\n", debugMode)
@@ -55,7 +50,7 @@ func serve(c *cli.Context) error {
 
 	logger.Info("Bot Starting...")
 
-	cfg, err := configs.New(logger, development)
+	cfg, err := configs.New(logger, models.Development)
 	if err != nil {
 		return err
 	}

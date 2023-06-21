@@ -4,6 +4,7 @@ package configs
 import (
 	"fmt"
 
+	"github.com/barahouei/clean-architecture-telegram-bot/models"
 	"github.com/barahouei/clean-architecture-telegram-bot/pkg/logger"
 	"github.com/caarlos0/env/v8"
 	"github.com/joho/godotenv"
@@ -28,21 +29,13 @@ type (
 		DBName   string `env:"BOT_POSTGRES_DBNAME,required"`
 		SSL      string `env:"BOT_POSTGRES_SSL_MODE,required"`
 	}
-
-	Mode uint
-)
-
-const (
-	_ Mode = iota
-	development
-	production
 )
 
 // New returns the config, if can't open .env file or parse environment variables it returns an error.
 //
 // make sure to delete the .env file and pass production mode in production.
-func New(logger logger.Logger, mode Mode) (*Config, error) {
-	if mode == development {
+func New(logger logger.Logger, mode models.Mode) (*Config, error) {
+	if mode == models.Development {
 		err := godotenv.Load("configs/.env")
 		if err != nil {
 			logger.Error(fmt.Sprintf("unable to load .env file: %e", err))
