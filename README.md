@@ -8,4 +8,8 @@ Main functionality for the App.
 
 ## /configs
 
-Configuration for the App.
+Configurations for the App.
+
+## /pkg
+
+Libraries or functions that help to maintain and improve the App.
