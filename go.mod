@@ -3,6 +3,8 @@ module github.com/barahouei/clean-architecture-telegram-bot
 go 1.20
 
 require (
+	github.com/caarlos0/env/v8 v8.0.0
+	github.com/joho/godotenv v1.5.1
 	github.com/urfave/cli/v2 v2.25.7
 	go.uber.org/zap v1.24.0
 )
