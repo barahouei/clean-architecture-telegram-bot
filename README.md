@@ -10,6 +10,10 @@ Main functionality for the App.
 
 Configurations for the App.
 
+## /models
+
+Entities that are essential to the application, like structs and types.
+
 ## /pkg
 
 Libraries or functions that help to maintain and improve the App.
