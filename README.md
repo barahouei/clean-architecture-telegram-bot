@@ -17,3 +17,7 @@ Entities that are essential to the application, like structs and types.
 ## /pkg
 
 Libraries or functions that help to maintain and improve the App.
+
+## /repositories
+
+Databases and their functionalities.

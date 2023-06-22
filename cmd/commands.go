@@ -2,6 +2,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -9,6 +10,7 @@ import (
 	"github.com/barahouei/clean-architecture-telegram-bot/configs"
 	"github.com/barahouei/clean-architecture-telegram-bot/models"
 	"github.com/barahouei/clean-architecture-telegram-bot/pkg/logger/zap"
+	"github.com/barahouei/clean-architecture-telegram-bot/repositories/postgres"
 	"github.com/urfave/cli/v2"
 	"go.uber.org/zap/zapcore"
 )
@@ -56,6 +58,32 @@ func serve(c *cli.Context) error {
 	}
 
 	fmt.Println(cfg)
+
+	db, err := postgres.New(cfg.Postgres, logger)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	// user := &models.User{
+	// 	TelegramID: 649,
+	// 	Username:   "test4",
+	// 	FirstName:  "name",
+	// 	LastName:   "family",
+	// 	JoinedAt:   time.Now(),
+	// 	Language:   models.En,
+	// }
+	// err = db.CreateUser(context.Background(), user)
+	// if err != nil {
+	// 	return err
+	// }
+
+	user, err := db.GetUser(context.Background(), 649)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(user)
 
 	return nil
 }
