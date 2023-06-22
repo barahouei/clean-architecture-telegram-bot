@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/barahouei/clean-architecture-telegram-bot/configs"
 	"github.com/barahouei/clean-architecture-telegram-bot/models"
 	"github.com/barahouei/clean-architecture-telegram-bot/pkg/logger/zap"
 	"github.com/barahouei/clean-architecture-telegram-bot/repositories/postgres"
+	"github.com/barahouei/clean-architecture-telegram-bot/services/account"
 	"github.com/urfave/cli/v2"
 	"go.uber.org/zap/zapcore"
 )
@@ -65,24 +67,36 @@ func serve(c *cli.Context) error {
 	}
 	defer db.Close()
 
-	// user := &models.User{
-	// 	TelegramID: 649,
-	// 	Username:   "test4",
-	// 	FirstName:  "name",
-	// 	LastName:   "family",
-	// 	JoinedAt:   time.Now(),
-	// 	Language:   models.En,
-	// }
+	user := &models.User{
+		TelegramID: 650,
+		Username:   "test5",
+		FirstName:  "name",
+		LastName:   "family",
+		JoinedAt:   time.Now(),
+		Language:   models.En,
+	}
 	// err = db.CreateUser(context.Background(), user)
 	// if err != nil {
 	// 	return err
 	// }
 
-	user, err := db.GetUser(context.Background(), 649)
+	// user, err := db.GetUser(context.Background(), 649)
+	// if err != nil {
+	// 	return err
+	// }
+
+	acc := account.New(db, logger)
+
+	// acc.Create(context.Background(), user)
+
+	user, err = acc.Get(context.Background(), user)
 	if err != nil {
+		logger.Error(err)
+
 		return err
 	}
-
+	fmt.Println(acc.Language(context.Background(), user))
+	fmt.Println(acc.IsExist(context.Background(), user))
 	fmt.Println(user)
 
 	return nil
