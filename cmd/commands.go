@@ -63,6 +63,7 @@ func serve(c *cli.Context) error {
 
 	db, err := postgres.New(cfg.Postgres, logger)
 	if err != nil {
+		logger.Error(err)
 		return err
 	}
 	defer db.Close()

@@ -14,8 +14,6 @@ func (p *postgres) CreateUser(ctx context.Context, user *models.User) error {
 
 	_, err := p.db.Exec(query, user.TelegramID, user.Username, user.FirstName, user.LastName, user.JoinedAt, user.Language)
 	if err != nil {
-		p.logger.Error(err)
-
 		return err
 	}
 
@@ -31,9 +29,7 @@ func (p *postgres) GetUser(ctx context.Context, telegramID int64) (*models.User,
 	row := p.db.QueryRow(query, telegramID)
 	err := row.Scan(&user.ID, &user.TelegramID, &user.Username, &user.FirstName, &user.LastName, &user.JoinedAt, &user.Language)
 	if err != nil {
-		p.logger.Error(fmt.Sprintf("can not fetch user from database: %v", err))
-
-		return nil, err
+		return nil, fmt.Errorf("can not fetch user %d from database: %v", telegramID, err)
 	}
 
 	return &user, err

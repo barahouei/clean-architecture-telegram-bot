@@ -28,16 +28,12 @@ func dsn(cfg configs.Postgres) string {
 func New(cfg configs.Postgres, logger logger.Logger) (repositories.DB, error) {
 	db, err := sql.Open("postgres", dsn(cfg))
 	if err != nil {
-		logger.Error(fmt.Sprintf("failed to open the database driver: %v", err))
-
-		return nil, err
+		return nil, fmt.Errorf("failed to open the database driver: %v", err)
 	}
 
 	err = db.Ping()
 	if err != nil {
-		logger.Error(fmt.Sprintf("can not ping the database: %v", err))
-
-		return nil, err
+		return nil, fmt.Errorf("can not ping the database: %v", err)
 	}
 
 	return &postgres{db: db, logger: logger}, nil
@@ -47,9 +43,7 @@ func New(cfg configs.Postgres, logger logger.Logger) (repositories.DB, error) {
 func (p *postgres) Close() error {
 	err := p.db.Close()
 	if err != nil {
-		p.logger.Error(fmt.Sprintf("can not close the database: %v", err))
-
-		return err
+		return fmt.Errorf("can not close the database: %v", err)
 	}
 
 	return nil
