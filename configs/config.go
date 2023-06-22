@@ -2,8 +2,6 @@
 package configs
 
 import (
-	"fmt"
-
 	"github.com/barahouei/clean-architecture-telegram-bot/models"
 	"github.com/barahouei/clean-architecture-telegram-bot/pkg/logger"
 	"github.com/caarlos0/env/v8"
@@ -38,7 +36,7 @@ func New(logger logger.Logger, mode models.Mode) (*Config, error) {
 	if mode == models.Development {
 		err := godotenv.Load("configs/.env")
 		if err != nil {
-			logger.Error(fmt.Sprintf("unable to load .env file: %e", err))
+			logger.Error(err)
 
 			return nil, err
 		}
@@ -48,7 +46,7 @@ func New(logger logger.Logger, mode models.Mode) (*Config, error) {
 
 	err := env.Parse(&cfg)
 	if err != nil {
-		logger.Error(fmt.Sprintf("unable to parse ennvironment variables: %e", err))
+		logger.Error(err)
 
 		return nil, err
 	}

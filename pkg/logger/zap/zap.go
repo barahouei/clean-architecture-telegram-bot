@@ -37,11 +37,11 @@ func New(w io.Writer, level zapcore.Level) logger.Logger {
 }
 
 // Info logs an info.
-func (l *log) Info(message string) {
+func (l *log) Info(message ...any) {
 	l.zap.Info(message)
 }
 
 // Info logs an Error.
-func (l *log) Error(message string) {
+func (l *log) Error(message ...any) {
 	l.zap.Error(message)
 }

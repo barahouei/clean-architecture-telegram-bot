@@ -3,6 +3,6 @@ package logger
 
 // Logger declares methods for logging.
 type Logger interface {
-	Info(message string)
-	Error(message string)
+	Info(message ...any)
+	Error(message ...any)
 }
