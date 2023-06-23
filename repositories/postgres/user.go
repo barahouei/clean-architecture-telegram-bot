@@ -34,3 +34,15 @@ func (p *postgres) GetUser(ctx context.Context, telegramID int64) (*models.User,
 
 	return &user, err
 }
+
+// UpdateLanguage changes user's language.
+func (p *postgres) UpdateLanguage(ctx context.Context, lang models.Language, telegramID int64) error {
+	query := "UPDATE users SET language=$1 WHERE telegram_id=$2"
+
+	_, err := p.db.Exec(query, lang, telegramID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

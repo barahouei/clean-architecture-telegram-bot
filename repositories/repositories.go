@@ -18,4 +18,5 @@ type DB interface {
 type User interface {
 	CreateUser(ctx context.Context, user *models.User) error
 	GetUser(ctx context.Context, telegramID int64) (*models.User, error)
+	UpdateLanguage(ctx context.Context, lang models.Language, telegramID int64) error
 }

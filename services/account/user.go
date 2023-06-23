@@ -46,6 +46,16 @@ func (a *acc) Language(ctx context.Context, user *models.User) (models.Language,
 	return user.Language, nil
 }
 
+// ChooseLanguage sets user's language.
+func (a *acc) ChooseLanguage(ctx context.Context, lang models.Language, user *models.User) error {
+	err := a.db.UpdateLanguage(ctx, lang, user.TelegramID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // IsExist checks if user is already a member.
 func (a *acc) IsExist(ctx context.Context, user *models.User) bool {
 	_, err := a.db.GetUser(ctx, user.TelegramID)
