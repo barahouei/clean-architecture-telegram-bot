@@ -9,3 +9,9 @@ const (
 	En
 	Fa
 )
+
+func (l Language) String() string {
+	langs := []string{"", "En", "Fa"}
+
+	return langs[l]
+}
