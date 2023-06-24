@@ -13,6 +13,7 @@ import (
 type handler struct {
 	logger  logger.Logger
 	account services.Account
+	message services.Message
 }
 
 // deleteLastMessage deletes recieved request for user.
