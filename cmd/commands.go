@@ -6,13 +6,14 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
+	"os/signal"
+	"syscall"
 
 	"github.com/barahouei/clean-architecture-telegram-bot/configs"
+	"github.com/barahouei/clean-architecture-telegram-bot/handlers/bot"
 	"github.com/barahouei/clean-architecture-telegram-bot/models"
 	"github.com/barahouei/clean-architecture-telegram-bot/pkg/logger/zap"
 	"github.com/barahouei/clean-architecture-telegram-bot/repositories/postgres"
-	"github.com/barahouei/clean-architecture-telegram-bot/services/account"
 	"github.com/urfave/cli/v2"
 	"go.uber.org/zap/zapcore"
 )
@@ -41,9 +42,6 @@ var (
 
 // serve is the main command that runs the application.
 func serve(c *cli.Context) error {
-	fmt.Printf("Debug mod is: %t\n", debugMode)
-	fmt.Println("clean-architecture-telegram-bot")
-
 	file, err := os.OpenFile("logs/bot.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		return err
@@ -52,53 +50,36 @@ func serve(c *cli.Context) error {
 
 	logger := zap.New(file, zapcore.InfoLevel)
 
-	logger.Info("Bot Starting...")
-
 	cfg, err := configs.New(logger, models.Development)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println(cfg)
-
 	db, err := postgres.New(cfg.Postgres, logger)
 	if err != nil {
 		logger.Error(err)
+
 		return err
 	}
 	defer db.Close()
 
-	user := &models.User{
-		TelegramID: 650,
-		Username:   "test5",
-		FirstName:  "name",
-		LastName:   "family",
-		JoinedAt:   time.Now(),
-		Language:   models.En,
-	}
-	// err = db.CreateUser(context.Background(), user)
-	// if err != nil {
-	// 	return err
-	// }
+	bot := bot.New(db, logger)
 
-	// user, err := db.GetUser(context.Background(), 649)
-	// if err != nil {
-	// 	return err
-	// }
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
 
-	acc := account.New(db, logger)
+	ctx := context.Background()
 
-	// acc.Create(context.Background(), user)
+	go func() {
+		err = bot.Start(ctx, cfg.App, debugMode)
+		if err != nil {
+			logger.Error(fmt.Sprintf("bot failed to start: %v", err))
+		}
+	}()
 
-	user, err = acc.Get(context.Background(), user)
-	if err != nil {
-		logger.Error(err)
+	<-sigChan
 
-		return err
-	}
-	fmt.Println(acc.Language(context.Background(), user))
-	fmt.Println(acc.IsExist(context.Background(), user))
-	fmt.Println(user)
+	logger.Info("Received an interrupt, Bot stopped...")
 
 	return nil
 }
@@ -106,6 +87,7 @@ func serve(c *cli.Context) error {
 // debug is a subcommand of the serve command that turns debug mode on.
 func debug(c *cli.Context) error {
 	log.Println("Debug mode is on")
+
 	debugMode = true
 
 	return nil
