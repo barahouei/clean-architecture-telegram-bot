@@ -3,10 +3,8 @@ package bot
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/barahouei/clean-architecture-telegram-bot/models"
-	"github.com/barahouei/clean-architecture-telegram-bot/pkg/keyboards"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
@@ -23,6 +21,12 @@ func (h *handler) Callback(ctx context.Context, tgbot *tgbotapi.BotAPI, update t
 
 	msg := tgbotapi.NewMessage(update.CallbackQuery.Message.Chat.ID, update.CallbackQuery.Data)
 
+	var err error
+	user.Language, err = h.account.Language(ctx, user)
+	if err != nil {
+		h.logger.Error(err)
+	}
+
 	switch update.CallbackQuery.Data {
 	case "en":
 		err := h.account.ChooseLanguage(ctx, models.En, user)
@@ -30,42 +34,23 @@ func (h *handler) Callback(ctx context.Context, tgbot *tgbotapi.BotAPI, update t
 			h.logger.Error(err)
 		}
 
-		msg.Text = mainMenu(user.FirstName)
-		msg.ReplyMarkup = keyboards.MainKeyboard
+		msg = h.callback.Menu(ctx, msg, user)
 	case "fa":
 		err := h.account.ChooseLanguage(ctx, models.Fa, user)
 		if err != nil {
 			h.logger.Error(err)
 		}
 
-		msg.Text = mainMenu(user.FirstName)
-		msg.ReplyMarkup = keyboards.MainKeyboard
+		msg = h.callback.Menu(ctx, msg, user)
 	case "information":
-		lang, err := h.account.Language(ctx, user)
-		if err != nil {
-			h.logger.Error(err)
-		}
-
-		info := fmt.Sprintf("Telegram ID: %d\nUsername: %s\nFirstname: %s\nLastname: %s\nLanguage:%v",
-			user.TelegramID,
-			user.Username,
-			user.FirstName,
-			user.LastName,
-			lang.String(),
-		)
-
-		msg.Text = info
-		msg.ReplyMarkup = keyboards.BackToMainKeyboard
+		msg = h.callback.Information(ctx, msg, user)
 	case "help":
-		msg.Text = "This is a telegram bot!"
-		msg.ReplyMarkup = keyboards.BackToMainKeyboard
-
+		msg = h.callback.Help(ctx, msg, user)
 	case "backToMain":
-		msg.Text = mainMenu(user.FirstName)
-		msg.ReplyMarkup = keyboards.MainKeyboard
+		msg = h.callback.Menu(ctx, msg, user)
 	}
 
-	_, err := tgbot.Send(msg)
+	_, err = tgbot.Send(msg)
 	if err != nil {
 		h.logger.Error(err)
 	}

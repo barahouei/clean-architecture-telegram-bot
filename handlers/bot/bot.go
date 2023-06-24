@@ -10,6 +10,7 @@ import (
 	"github.com/barahouei/clean-architecture-telegram-bot/pkg/logger"
 	"github.com/barahouei/clean-architecture-telegram-bot/repositories"
 	"github.com/barahouei/clean-architecture-telegram-bot/services/account"
+	"github.com/barahouei/clean-architecture-telegram-bot/services/callback"
 	"github.com/barahouei/clean-architecture-telegram-bot/services/command"
 	"github.com/barahouei/clean-architecture-telegram-bot/services/message"
 
@@ -26,12 +27,14 @@ func New(db repositories.DB, logger logger.Logger) handlers.Bot {
 	acc := account.New(db, logger)
 	msg := message.New(db, logger)
 	cmd := command.New(db, logger)
+	call := callback.New(db, logger)
 
 	handler := handler{
-		logger:  logger,
-		account: acc,
-		message: msg,
-		command: cmd,
+		logger:   logger,
+		account:  acc,
+		message:  msg,
+		command:  cmd,
+		callback: call,
 	}
 
 	return &bot{handler: &handler, logger: logger}
