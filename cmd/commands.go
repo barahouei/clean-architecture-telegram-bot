@@ -74,6 +74,7 @@ func serve(c *cli.Context) error {
 		err = bot.Start(ctx, cfg.App, debugMode)
 		if err != nil {
 			logger.Error(fmt.Sprintf("bot failed to start: %v", err))
+			os.Exit(1)
 		}
 	}()
 
