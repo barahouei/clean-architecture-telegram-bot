@@ -14,6 +14,7 @@ type handler struct {
 	logger  logger.Logger
 	account services.Account
 	message services.Message
+	command services.Command
 }
 
 // deleteLastMessage deletes recieved request for user.

@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/barahouei/clean-architecture-telegram-bot/models"
-	"github.com/barahouei/clean-architecture-telegram-bot/pkg/keyboards"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
@@ -25,8 +24,7 @@ func (h *handler) Command(ctx context.Context, tgbot *tgbotapi.BotAPI, update tg
 
 	if update.Message.Command() == "start" {
 		if h.account.IsExist(ctx, user) {
-			msg.Text = "Choose a language:"
-			msg.ReplyMarkup = keyboards.LangKeyboard
+			msg = h.command.Language(ctx, msg)
 		} else {
 			user.JoinedAt = time.Now()
 
@@ -35,8 +33,7 @@ func (h *handler) Command(ctx context.Context, tgbot *tgbotapi.BotAPI, update tg
 				h.logger.Error(err)
 			}
 
-			msg.Text = "Choose a language:"
-			msg.ReplyMarkup = keyboards.LangKeyboard
+			msg = h.command.Language(ctx, msg)
 		}
 	}
 

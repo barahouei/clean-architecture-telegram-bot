@@ -10,6 +10,7 @@ import (
 	"github.com/barahouei/clean-architecture-telegram-bot/pkg/logger"
 	"github.com/barahouei/clean-architecture-telegram-bot/repositories"
 	"github.com/barahouei/clean-architecture-telegram-bot/services/account"
+	"github.com/barahouei/clean-architecture-telegram-bot/services/command"
 	"github.com/barahouei/clean-architecture-telegram-bot/services/message"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -24,11 +25,13 @@ type bot struct {
 func New(db repositories.DB, logger logger.Logger) handlers.Bot {
 	acc := account.New(db, logger)
 	msg := message.New(db, logger)
+	cmd := command.New(db, logger)
 
 	handler := handler{
 		logger:  logger,
 		account: acc,
 		message: msg,
+		command: cmd,
 	}
 
 	return &bot{handler: &handler, logger: logger}
