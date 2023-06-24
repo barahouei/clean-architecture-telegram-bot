@@ -21,12 +21,13 @@ func (h *handler) Message(ctx context.Context, tgbot *tgbotapi.BotAPI, update tg
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
 
-	lang, err := h.account.Language(ctx, user)
+	var err error
+	user.Language, err = h.account.Language(ctx, user)
 	if err != nil {
 		h.logger.Error(err)
 	}
 
-	msg = h.message.Wrong(ctx, msg, lang)
+	msg = h.message.Wrong(ctx, msg, user.Language)
 
 	_, err = tgbot.Send(msg)
 	if err != nil {
