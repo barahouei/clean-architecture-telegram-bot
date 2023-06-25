@@ -10,5 +10,5 @@ import (
 
 // Message implements message functionalities.
 type Message interface {
-	Wrong(ctx context.Context, msg tgbotapi.MessageConfig, lang models.Language) tgbotapi.MessageConfig
+	Wrong(ctx context.Context, msg tgbotapi.MessageConfig, user *models.User) tgbotapi.MessageConfig
 }

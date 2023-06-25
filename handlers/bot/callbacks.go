@@ -34,6 +34,7 @@ func (h *handler) Callback(ctx context.Context, tgbot *tgbotapi.BotAPI, update t
 			h.logger.Error(err)
 		}
 
+		user.Language = models.En
 		msg = h.callback.Menu(ctx, msg, user)
 	case "fa":
 		err := h.account.ChooseLanguage(ctx, models.Fa, user)
@@ -41,6 +42,7 @@ func (h *handler) Callback(ctx context.Context, tgbot *tgbotapi.BotAPI, update t
 			h.logger.Error(err)
 		}
 
+		user.Language = models.Fa
 		msg = h.callback.Menu(ctx, msg, user)
 	case "information":
 		msg = h.callback.Information(ctx, msg, user)

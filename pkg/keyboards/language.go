@@ -8,7 +8,12 @@ import (
 	emoji "github.com/jayco/go-emoji-flag"
 )
 
-var LangKeyboard = tgbotapi.NewInlineKeyboardMarkup(
+// Language returns choosing language keyboard.
+func Language() tgbotapi.InlineKeyboardMarkup {
+	return language
+}
+
+var language = tgbotapi.NewInlineKeyboardMarkup(
 	tgbotapi.NewInlineKeyboardRow(
 
 		tgbotapi.NewInlineKeyboardButtonData(fmt.Sprintf("English %v", emoji.GetFlag("US")), "en"),

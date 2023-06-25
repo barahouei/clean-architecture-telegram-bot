@@ -27,7 +27,7 @@ func (h *handler) Message(ctx context.Context, tgbot *tgbotapi.BotAPI, update tg
 		h.logger.Error(err)
 	}
 
-	msg = h.message.Wrong(ctx, msg, user.Language)
+	msg = h.message.Wrong(ctx, msg, user)
 
 	_, err = tgbot.Send(msg)
 	if err != nil {

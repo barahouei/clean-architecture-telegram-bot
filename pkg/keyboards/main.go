@@ -1,11 +1,34 @@
 // Package keyboards containes all bot's keyboards.
 package keyboards
 
-import tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+import (
+	"github.com/barahouei/clean-architecture-telegram-bot/models"
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+)
 
-var MainKeyboard = tgbotapi.NewInlineKeyboardMarkup(
+// Main returns maun menu's keyboard.
+func Main(lang models.Language) tgbotapi.InlineKeyboardMarkup {
+	if lang == models.En {
+		return mainEN
+	} else if lang == models.Fa {
+		return mainFa
+	}
+
+	return tgbotapi.InlineKeyboardMarkup{}
+}
+
+// mainEN is main menu in English
+var mainEN = tgbotapi.NewInlineKeyboardMarkup(
 	tgbotapi.NewInlineKeyboardRow(
 		tgbotapi.NewInlineKeyboardButtonData("Your Information", "information"),
 		tgbotapi.NewInlineKeyboardButtonData("Help", "help"),
+	),
+)
+
+// mainFa is main menu in Persian.
+var mainFa = tgbotapi.NewInlineKeyboardMarkup(
+	tgbotapi.NewInlineKeyboardRow(
+		tgbotapi.NewInlineKeyboardButtonData("اطلاعات شما", "information"),
+		tgbotapi.NewInlineKeyboardButtonData("کمک", "help"),
 	),
 )

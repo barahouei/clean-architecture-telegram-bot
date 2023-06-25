@@ -24,7 +24,7 @@ func (h *handler) Command(ctx context.Context, tgbot *tgbotapi.BotAPI, update tg
 
 	if update.Message.Command() == "start" {
 		if h.account.IsExist(ctx, user) {
-			msg = h.command.Language(ctx, msg)
+			msg = h.command.Language(ctx, msg, user)
 		} else {
 			user.JoinedAt = time.Now()
 
@@ -33,7 +33,7 @@ func (h *handler) Command(ctx context.Context, tgbot *tgbotapi.BotAPI, update tg
 				h.logger.Error(err)
 			}
 
-			msg = h.command.Language(ctx, msg)
+			msg = h.command.Language(ctx, msg, user)
 		}
 	}
 
