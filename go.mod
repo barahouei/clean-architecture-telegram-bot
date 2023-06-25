@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/caarlos0/env/v8 v8.0.0
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
+	github.com/jayco/go-emoji-flag v0.0.0-20190810054606-01604da018da
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
 	github.com/urfave/cli/v2 v2.25.7
