@@ -23,6 +23,9 @@ var mainEN = tgbotapi.NewInlineKeyboardMarkup(
 		tgbotapi.NewInlineKeyboardButtonData("Your Information", "information"),
 		tgbotapi.NewInlineKeyboardButtonData("Help", "help"),
 	),
+	tgbotapi.NewInlineKeyboardRow(
+		tgbotapi.NewInlineKeyboardButtonData("Choosing another language", "language"),
+	),
 )
 
 // mainFa is main menu in Persian.
@@ -30,5 +33,8 @@ var mainFa = tgbotapi.NewInlineKeyboardMarkup(
 	tgbotapi.NewInlineKeyboardRow(
 		tgbotapi.NewInlineKeyboardButtonData("اطلاعات شما", "information"),
 		tgbotapi.NewInlineKeyboardButtonData("کمک", "help"),
+	),
+	tgbotapi.NewInlineKeyboardRow(
+		tgbotapi.NewInlineKeyboardButtonData("انتخاب زبان دیگر", "language"),
 	),
 )

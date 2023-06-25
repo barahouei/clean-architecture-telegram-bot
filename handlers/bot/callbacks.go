@@ -48,6 +48,8 @@ func (h *handler) Callback(ctx context.Context, tgbot *tgbotapi.BotAPI, update t
 		msg = h.callback.Information(ctx, msg, user)
 	case "help":
 		msg = h.callback.Help(ctx, msg, user)
+	case "language":
+		msg = h.callback.Language(ctx, msg, user)
 	case "backToMain":
 		msg = h.callback.Menu(ctx, msg, user)
 	}
