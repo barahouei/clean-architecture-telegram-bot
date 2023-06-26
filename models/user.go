@@ -7,8 +7,8 @@ import "time"
 type User struct {
 	ID         int       `bson:"_id"`
 	TelegramID int64     `bson:"telegram_id,omitempty"`
-	Username   string    `bson:"username,omitempty"`
-	FirstName  string    `bson:"firstname"`
+	Username   string    `bson:"username"`
+	FirstName  string    `bson:"firstname,omitempty"`
 	LastName   string    `bson:"lastname"`
 	JoinedAt   time.Time `bson:"joined_at,omitempty"`
 	Language   Language  `bson:"language"`
