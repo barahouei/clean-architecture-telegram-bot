@@ -5,11 +5,11 @@ import "time"
 
 // User represents user table structure in a database.
 type User struct {
-	ID         int
-	TelegramID int64
-	Username   string
-	FirstName  string
-	LastName   string
-	JoinedAt   time.Time
-	Language   Language
+	ID         int       `bson:"_id"`
+	TelegramID int64     `bson:"telegram_id,omitempty"`
+	Username   string    `bson:"username,omitempty"`
+	FirstName  string    `bson:"firstname"`
+	LastName   string    `bson:"lastname"`
+	JoinedAt   time.Time `bson:"joined_at,omitempty"`
+	Language   Language  `bson:"language"`
 }

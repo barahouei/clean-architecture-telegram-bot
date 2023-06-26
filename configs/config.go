@@ -12,6 +12,7 @@ type (
 	Config struct {
 		App      App
 		Postgres Postgres
+		MongoDB  MongoDB
 	}
 
 	App struct {
@@ -26,6 +27,15 @@ type (
 		Password string `env:"BOT_POSTGRES_PASSWORD,required"`
 		DBName   string `env:"BOT_POSTGRES_DBNAME,required"`
 		SSL      string `env:"BOT_POSTGRES_SSL_MODE,required"`
+	}
+
+	MongoDB struct {
+		Protocol string `env:"BOT_MONGODB_PROTOCOL,required"`
+		Username string `env:"BOT_MONGODB_USERNAME,required"`
+		Password string `env:"BOT_MONGODB_PASSWORD,required"`
+		Host     string `env:"BOT_MONGODB_HOST,required"`
+		Port     string `env:"BOT_MONGODB_PORT,required"`
+		DBName   string `env:"BOT_MONGODB_DBNAME,required"`
 	}
 )
 
