@@ -2,6 +2,7 @@
 package postgres
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 
@@ -25,7 +26,7 @@ func dsn(cfg configs.Postgres) string {
 }
 
 // New creates a new connection to the database.
-func New(cfg configs.Postgres, logger logger.Logger) (repositories.DB, error) {
+func New(ctx context.Context, cfg configs.Postgres, logger logger.Logger) (repositories.DB, error) {
 	db, err := sql.Open("postgres", dsn(cfg))
 	if err != nil {
 		return nil, fmt.Errorf("failed to open the database driver: %v", err)
@@ -40,7 +41,7 @@ func New(cfg configs.Postgres, logger logger.Logger) (repositories.DB, error) {
 }
 
 // Close terminates a database connection.
-func (p *postgres) Close() error {
+func (p *postgres) Close(ctx context.Context) error {
 	err := p.db.Close()
 	if err != nil {
 		return fmt.Errorf("can not close the database: %v", err)

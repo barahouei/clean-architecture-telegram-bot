@@ -25,9 +25,7 @@ func dsn(cfg configs.MongoDB) string {
 }
 
 // New creates a new connection to the database.
-func New(cfg configs.MongoDB, logger logger.Logger) (repositories.DB, error) {
-	ctx := context.TODO()
-
+func New(ctx context.Context, cfg configs.MongoDB, logger logger.Logger) (repositories.DB, error) {
 	clientOptions := options.Client().ApplyURI(dsn(cfg))
 
 	client, err := mongo.Connect(ctx, clientOptions)
@@ -46,8 +44,8 @@ func New(cfg configs.MongoDB, logger logger.Logger) (repositories.DB, error) {
 }
 
 // Close terminates a database connection.
-func (m *mongodb) Close() error {
-	err := m.db.Client().Disconnect(context.TODO())
+func (m *mongodb) Close(ctx context.Context) error {
+	err := m.db.Client().Disconnect(ctx)
 	if err != nil {
 		return fmt.Errorf("can not close the database: %v", err)
 	}

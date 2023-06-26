@@ -11,7 +11,7 @@ import (
 type DB interface {
 	User
 
-	Close() error
+	Close(ctx context.Context) error
 }
 
 // User implements user functionalities.

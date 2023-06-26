@@ -55,20 +55,20 @@ func serve(c *cli.Context) error {
 		return err
 	}
 
-	db, err := postgres.New(cfg.Postgres, logger)
+	ctx := context.TODO()
+
+	db, err := postgres.New(ctx, cfg.Postgres, logger)
 	if err != nil {
 		logger.Error(err)
 
 		return err
 	}
-	defer db.Close()
+	defer db.Close(ctx)
 
 	bot := bot.New(db, logger)
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
-
-	ctx := context.TODO()
 
 	go func() {
 		err = bot.Start(ctx, cfg.App, debugMode)
