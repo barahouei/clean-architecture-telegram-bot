@@ -68,7 +68,7 @@ func serve(c *cli.Context) error {
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
 
-	ctx := context.Background()
+	ctx := context.TODO()
 
 	go func() {
 		err = bot.Start(ctx, cfg.App, debugMode)
