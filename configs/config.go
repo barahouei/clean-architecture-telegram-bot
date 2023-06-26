@@ -22,7 +22,7 @@ type (
 	Postgres struct {
 		Host     string `env:"BOT_POSTGRES_HOST,required"`
 		Port     string `env:"BOT_POSTGRES_PORT,required"`
-		User     string `env:"BOT_POSTGRES_USER,required"`
+		Username string `env:"BOT_POSTGRES_USERNAME,required"`
 		Password string `env:"BOT_POSTGRES_PASSWORD,required"`
 		DBName   string `env:"BOT_POSTGRES_DBNAME,required"`
 		SSL      string `env:"BOT_POSTGRES_SSL_MODE,required"`

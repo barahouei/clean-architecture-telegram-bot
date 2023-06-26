@@ -20,7 +20,7 @@ type postgres struct {
 // dsn returns formatted data source name.
 func dsn(cfg configs.Postgres) string {
 	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DBName, cfg.SSL,
+		cfg.Host, cfg.Port, cfg.Username, cfg.Password, cfg.DBName, cfg.SSL,
 	)
 }
 
