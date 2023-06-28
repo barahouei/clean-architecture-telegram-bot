@@ -64,8 +64,10 @@ func (b *bot) Start(ctx context.Context, cfg configs.App, debugMode bool) error 
 			go b.handler.Command(ctx, tgbot, update)
 		} else if update.CallbackQuery != nil {
 			go b.handler.Callback(ctx, tgbot, update)
-		} else {
+		} else if update.Message != nil {
 			go b.handler.Message(ctx, tgbot, update)
+		} else {
+			continue
 		}
 	}
 
