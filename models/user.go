@@ -5,7 +5,7 @@ import "time"
 
 // User represents user table structure in a database.
 type User struct {
-	ID         int       `bson:"_id"`
+	ID         int64     `bson:"id"`
 	TelegramID int64     `bson:"telegram_id,omitempty"`
 	Username   string    `bson:"username"`
 	FirstName  string    `bson:"firstname,omitempty"`

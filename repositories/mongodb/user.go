@@ -13,7 +13,14 @@ import (
 func (m *mongodb) CreateUser(ctx context.Context, user *models.User) error {
 	collection := m.db.Collection("users")
 
-	_, err := collection.InsertOne(ctx, user)
+	total, err := collection.CountDocuments(ctx, bson.D{})
+	if err != nil {
+		return err
+	}
+
+	user.ID = total + 1
+
+	_, err = collection.InsertOne(ctx, user)
 	if err != nil {
 		return err
 	}
