@@ -32,7 +32,7 @@ func New(ctx context.Context, cfg configs.Postgres, logger logger.Logger) (repos
 		return nil, fmt.Errorf("failed to open the database driver: %v", err)
 	}
 
-	err = db.Ping()
+	err = db.PingContext(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("can not ping the database: %v", err)
 	}

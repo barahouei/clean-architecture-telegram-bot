@@ -12,7 +12,7 @@ import (
 func (p *postgres) CreateUser(ctx context.Context, user *models.User) error {
 	query := "INSERT INTO users(telegram_id, username, firstname, lastname, joined_at, language) VALUES($1, $2, $3, $4, $5, $6)"
 
-	_, err := p.db.Exec(query, user.TelegramID, user.Username, user.FirstName, user.LastName, user.JoinedAt, user.Language)
+	_, err := p.db.ExecContext(ctx, query, user.TelegramID, user.Username, user.FirstName, user.LastName, user.JoinedAt, user.Language)
 	if err != nil {
 		return err
 	}
@@ -26,7 +26,7 @@ func (p *postgres) GetUser(ctx context.Context, telegramID int64) (*models.User,
 
 	query := "SELECT * FROM users WHERE telegram_id=$1"
 
-	row := p.db.QueryRow(query, telegramID)
+	row := p.db.QueryRowContext(ctx, query, telegramID)
 	err := row.Scan(&user.ID, &user.TelegramID, &user.Username, &user.FirstName, &user.LastName, &user.JoinedAt, &user.Language)
 	if err != nil {
 		return nil, fmt.Errorf("can not fetch user %d from database: %v", telegramID, err)
@@ -39,7 +39,7 @@ func (p *postgres) GetUser(ctx context.Context, telegramID int64) (*models.User,
 func (p *postgres) UpdateLanguage(ctx context.Context, lang models.Language, telegramID int64) error {
 	query := "UPDATE users SET language=$1 WHERE telegram_id=$2"
 
-	_, err := p.db.Exec(query, lang, telegramID)
+	_, err := p.db.ExecContext(ctx, query, lang, telegramID)
 	if err != nil {
 		return err
 	}
