@@ -42,6 +42,13 @@ var (
 
 // serve is the main command that runs the application.
 func serve(c *cli.Context) error {
+	err := os.Mkdir("logs", os.ModePerm)
+	if err != nil {
+		if !os.IsExist(err) {
+			return err
+		}
+	}
+
 	file, err := os.OpenFile("logs/bot.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		return err
