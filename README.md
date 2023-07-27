@@ -2,6 +2,8 @@
 
 A sample project for creating telegram bots in Golang with clean architecture and repository pattern.
 
+## Directory Explanation:
+
 ## /cmd
 
 Main functionality for the application.
