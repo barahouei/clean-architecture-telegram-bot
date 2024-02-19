@@ -12,6 +12,7 @@ type (
 	Config struct {
 		App      App
 		Postgres Postgres
+		MySQL    MySQL
 		MongoDB  MongoDB
 	}
 
@@ -27,6 +28,15 @@ type (
 		Password string `env:"BOT_POSTGRES_PASSWORD,required"`
 		DBName   string `env:"BOT_POSTGRES_DBNAME,required"`
 		SSL      string `env:"BOT_POSTGRES_SSL_MODE,required"`
+	}
+
+	MySQL struct {
+		Username string `env:"BOT_MYSQL_USERNAME,required"`
+		Password string `env:"BOT_MYSQL_PASSWORD,required"`
+		Protocol string `env:"BOT_MYSQL_PROTOCOL,required"`
+		Host     string `env:"BOT_MYSQL_HOST,required"`
+		Port     string `env:"BOT_MYSQL_PORT,required"`
+		DBName   string `env:"BOT_MYSQL_DBNAME,required"`
 	}
 
 	MongoDB struct {
