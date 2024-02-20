@@ -13,6 +13,9 @@ import (
 	"github.com/barahouei/clean-architecture-telegram-bot/handlers/bot"
 	"github.com/barahouei/clean-architecture-telegram-bot/models"
 	"github.com/barahouei/clean-architecture-telegram-bot/pkg/logger/zap"
+	"github.com/barahouei/clean-architecture-telegram-bot/repositories"
+	"github.com/barahouei/clean-architecture-telegram-bot/repositories/mongodb"
+	"github.com/barahouei/clean-architecture-telegram-bot/repositories/mysql"
 	"github.com/barahouei/clean-architecture-telegram-bot/repositories/postgres"
 	"github.com/urfave/cli/v2"
 	"go.uber.org/zap/zapcore"
@@ -64,12 +67,32 @@ func serve(c *cli.Context) error {
 
 	ctx := context.TODO()
 
-	db, err := postgres.New(ctx, cfg.Postgres, logger)
-	if err != nil {
-		logger.Error(err)
+	var db repositories.DB
 
-		return err
+	switch cfg.App.Driver {
+	case "postgres":
+		db, err = postgres.New(ctx, cfg.Postgres, logger)
+		if err != nil {
+			logger.Error(err)
+
+			return err
+		}
+	case "mysql":
+		db, err = mysql.New(ctx, cfg.MySQL, logger)
+		if err != nil {
+			logger.Error(err)
+
+			return err
+		}
+	case "mongodb":
+		db, err = mongodb.New(ctx, cfg.MongoDB, logger)
+		if err != nil {
+			logger.Error(err)
+
+			return err
+		}
 	}
+
 	defer db.Close(ctx)
 
 	bot := bot.New(db, logger)

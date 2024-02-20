@@ -17,8 +17,9 @@ type (
 	}
 
 	App struct {
-		Name  string `env:"BOT_NAME,required"`
-		Token string `env:"BOT_APITOKEN,required"`
+		Name   string `env:"BOT_NAME,required"`
+		Token  string `env:"BOT_APITOKEN,required"`
+		Driver string `env:"BOT_DB_DRIVER,required"`
 	}
 
 	Postgres struct {

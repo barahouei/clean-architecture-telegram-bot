@@ -44,8 +44,6 @@ Libraries or functions that help to maintain and improve the application.
 
 Databases and their functionalities.
 
-No business logic should be implemented here, just simple `CRUD`.
-
 ## /services
 
 Services that application provides.
