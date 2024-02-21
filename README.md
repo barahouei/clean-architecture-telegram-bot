@@ -2,13 +2,8 @@
 
 A sample project for creating telegram bots in Golang with clean architecture and repository pattern.
 
-For running the app without building, use the following command:
-```
-go run main.go serve
-```
-
-[!NOTE] 
-Although this is a telegram bot, clean architecture principles are the same for any types of web applications.
+> [!NOTE]
+> Although this is a telegram bot, clean architecture principles are the same for any types of web applications.
 
 ## Directory Explanation:
 
