@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/barahouei/clean-architecture-telegram-bot/configs"
+	"github.com/barahouei/clean-architecture-telegram-bot/models"
 	"github.com/barahouei/clean-architecture-telegram-bot/pkg/logger"
 	"github.com/barahouei/clean-architecture-telegram-bot/repositories"
 
@@ -27,14 +28,14 @@ func dsn(cfg configs.MySQL) string {
 
 // New creates a new connection to the database.
 func New(ctx context.Context, cfg configs.MySQL, logger logger.Logger) (repositories.DB, error) {
-	db, err := sql.Open("mysql", dsn(cfg))
+	db, err := sql.Open(models.MySQL.String(), dsn(cfg))
 	if err != nil {
 		return nil, fmt.Errorf("failed to open the database driver: %v", err)
 	}
 
 	err = db.PingContext(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("can not ping the database: %v", err)
+		return nil, fmt.Errorf("could not ping the database: %v", err)
 	}
 
 	return &mysql{db: db, logger: logger}, nil
@@ -44,7 +45,7 @@ func New(ctx context.Context, cfg configs.MySQL, logger logger.Logger) (reposito
 func (m *mysql) Close(ctx context.Context) error {
 	err := m.db.Close()
 	if err != nil {
-		return fmt.Errorf("can not close the database: %v", err)
+		return fmt.Errorf("could not close the database: %v", err)
 	}
 
 	return nil

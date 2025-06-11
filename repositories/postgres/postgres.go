@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/barahouei/clean-architecture-telegram-bot/configs"
+	"github.com/barahouei/clean-architecture-telegram-bot/models"
 	"github.com/barahouei/clean-architecture-telegram-bot/pkg/logger"
 	"github.com/barahouei/clean-architecture-telegram-bot/repositories"
 
@@ -20,21 +21,21 @@ type postgres struct {
 
 // dsn returns formatted data source name.
 func dsn(cfg configs.Postgres) string {
-	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s application_name=cleanbot sslmode=%s",
 		cfg.Host, cfg.Port, cfg.Username, cfg.Password, cfg.DBName, cfg.SSL,
 	)
 }
 
 // New creates a new connection to the database.
 func New(ctx context.Context, cfg configs.Postgres, logger logger.Logger) (repositories.DB, error) {
-	db, err := sql.Open("postgres", dsn(cfg))
+	db, err := sql.Open(models.PostgreSQL.String(), dsn(cfg))
 	if err != nil {
 		return nil, fmt.Errorf("failed to open the database driver: %v", err)
 	}
 
 	err = db.PingContext(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("can not ping the database: %v", err)
+		return nil, fmt.Errorf("could not ping the database: %v", err)
 	}
 
 	return &postgres{db: db, logger: logger}, nil
@@ -44,7 +45,7 @@ func New(ctx context.Context, cfg configs.Postgres, logger logger.Logger) (repos
 func (p *postgres) Close(ctx context.Context) error {
 	err := p.db.Close()
 	if err != nil {
-		return fmt.Errorf("can not close the database: %v", err)
+		return fmt.Errorf("could not close the database: %v", err)
 	}
 
 	return nil

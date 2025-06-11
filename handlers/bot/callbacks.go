@@ -45,6 +45,10 @@ func (h *handler) Callback(ctx context.Context, tgbot *tgbotapi.BotAPI, update t
 		user.Language = models.Fa
 		msg = h.callback.Menu(ctx, msg, user)
 	case "information":
+		user, err := h.account.Get(ctx, user)
+		if err != nil {
+			h.logger.Error(err)
+		}
 		msg = h.callback.Information(ctx, msg, user)
 	case "help":
 		msg = h.callback.Help(ctx, msg, user)

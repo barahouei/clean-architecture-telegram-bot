@@ -1,13 +1,16 @@
 package main
 
 import (
-	"log"
+	"log/slog"
+	"os"
 
 	"github.com/barahouei/clean-architecture-telegram-bot/cmd"
 )
 
 func main() {
 	if err := cmd.Run(); err != nil {
-		log.Fatal(err)
+		slog.Error("failed to run command", slog.Any("error", err))
+
+		os.Exit(1)
 	}
 }

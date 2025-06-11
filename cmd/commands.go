@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
@@ -12,6 +13,7 @@ import (
 	"github.com/barahouei/clean-architecture-telegram-bot/configs"
 	"github.com/barahouei/clean-architecture-telegram-bot/handlers/bot"
 	"github.com/barahouei/clean-architecture-telegram-bot/models"
+	"github.com/barahouei/clean-architecture-telegram-bot/pkg/logger"
 	"github.com/barahouei/clean-architecture-telegram-bot/pkg/logger/zap"
 	"github.com/barahouei/clean-architecture-telegram-bot/repositories"
 	"github.com/barahouei/clean-architecture-telegram-bot/repositories/mongodb"
@@ -45,52 +47,39 @@ var (
 
 // serve is the main command that runs the application.
 func serve(c *cli.Context) error {
-	err := os.Mkdir("logs", os.ModePerm)
-	if err != nil {
-		if !os.IsExist(err) {
-			return err
+	createLogFolderErr := os.Mkdir("logs", os.ModePerm)
+	if createLogFolderErr != nil {
+		if !os.IsExist(createLogFolderErr) {
+			slog.Error("failed to create logs directory", slog.Any("error", createLogFolderErr))
+
+			os.Exit(1)
 		}
 	}
 
-	file, err := os.OpenFile("logs/bot.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		return err
+	file, createLogFileErr := os.OpenFile("logs/bot.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if createLogFileErr != nil {
+		slog.Error("failed to create log file", slog.Any("error", createLogFileErr))
+
+		os.Exit(1)
 	}
 	defer file.Close()
 
 	logger := zap.New(file, zapcore.InfoLevel)
 
-	cfg, err := configs.New(logger, models.Development)
-	if err != nil {
-		return err
+	cfg, cfgErr := configs.New(logger, models.Development)
+	if cfgErr != nil {
+		slog.Error("failed to load config", slog.Any("error", cfgErr))
+
+		os.Exit(1)
 	}
 
 	ctx := context.TODO()
 
-	var db repositories.DB
+	db, dbErr := newDatabase(ctx, cfg, logger)
+	if dbErr != nil {
+		logger.Error(fmt.Sprintf("failed to initialize database: %v", dbErr))
 
-	switch cfg.App.Driver {
-	case "postgres":
-		db, err = postgres.New(ctx, cfg.Postgres, logger)
-		if err != nil {
-			logger.Error(err)
-
-			return err
-		}
-	case "mysql":
-		db, err = mysql.New(ctx, cfg.MySQL, logger)
-		if err != nil {
-			logger.Error(err)
-
-			return err
-		}
-	case "mongodb":
-		db, err = mongodb.New(ctx, cfg.MongoDB, logger)
-		if err != nil {
-			logger.Error(err)
-
-			return err
-		}
+		os.Exit(1)
 	}
 
 	defer db.Close(ctx)
@@ -101,16 +90,17 @@ func serve(c *cli.Context) error {
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
 
 	go func() {
-		err = bot.Start(ctx, cfg.App, debugMode)
-		if err != nil {
-			logger.Error(fmt.Sprintf("bot failed to start: %v", err))
+		startErr := bot.Start(ctx, cfg.App, debugMode)
+		if startErr != nil {
+			logger.Error(fmt.Sprintf("bot failed to start: %v", startErr))
+
 			os.Exit(1)
 		}
 	}()
 
 	<-sigChan
 
-	logger.Info("Received an interrupt, Bot stopped...")
+	logger.Info("Received an interrupt or terminate signal, Bot stopped...")
 
 	return nil
 }
@@ -122,4 +112,29 @@ func debug(c *cli.Context) error {
 	debugMode = true
 
 	return nil
+}
+
+func newDatabase(ctx context.Context, cfg *configs.Config, logger logger.Logger) (repositories.DB, error) {
+	var db repositories.DB
+	var err error
+
+	switch cfg.App.Driver {
+	case models.PostgreSQL.String():
+		db, err = postgres.New(ctx, cfg.Postgres, logger)
+		if err != nil {
+			return nil, err
+		}
+	case models.MySQL.String():
+		db, err = mysql.New(ctx, cfg.MySQL, logger)
+		if err != nil {
+			return nil, err
+		}
+	case models.MongoDB.String():
+		db, err = mongodb.New(ctx, cfg.MongoDB, logger)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return db, nil
 }

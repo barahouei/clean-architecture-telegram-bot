@@ -47,7 +47,7 @@ func New(ctx context.Context, cfg configs.MongoDB, logger logger.Logger) (reposi
 func (m *mongodb) Close(ctx context.Context) error {
 	err := m.db.Client().Disconnect(ctx)
 	if err != nil {
-		return fmt.Errorf("can not close the database: %v", err)
+		return fmt.Errorf("could not close the database: %v", err)
 	}
 
 	return nil
